@@ -899,6 +899,7 @@ static ngx_int_t auth_jwt_check_claims(jwt_t *jwt, ngx_http_request_t *r, const 
 
     // We found expected claim in jwt, now we get expected value
     u_char* claim_value;
+    size_t claim_value_len;
     if (claim.var_index != NGX_CONF_UNSET)
     {
       ngx_http_variable_value_t* value = ngx_http_get_indexed_variable(r, claim.var_index);
@@ -910,14 +911,16 @@ static ngx_int_t auth_jwt_check_claims(jwt_t *jwt, ngx_http_request_t *r, const 
       }
 
       claim_value = value->data;
+      claim_value_len = value->len;
     }
     else
     {
       claim_value = claim.value.data;
+      claim_value_len = claim.value.len;
     }
 
     // We found expected value, now we compare it with jwt value
-    if (ngx_strlen(claim_value) != ngx_strlen(jwt_claim_value) || ngx_strncmp(jwt_claim_value, claim_value, claim.value.len) != 0)
+    if (claim_value_len != ngx_strlen(jwt_claim_value) || ngx_strncmp(jwt_claim_value, claim_value, claim_value_len) != 0)
     {
       ngx_log_error(NGX_LOG_WARN, r->connection->log, 0, "JWT: invalid value for claim %s (%s)", claim.key.data, claim_value);
       return NGX_ERROR;
