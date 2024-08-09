@@ -53,6 +53,16 @@ http {
             auth_jwt on;
         }
 
+        location /secured-by-claim/ {
+            auth_jwt_claim claim_name claim_value;
+            auth_jwt on;
+        }
+
+        location /secured-by-claim-variable/ {
+            auth_jwt_claim claim_name $variable;
+            auth_jwt on;
+        }
+
         location /not-secure/ {}
     }
 }
@@ -139,6 +149,14 @@ server {
 ```
 
 > Note that as `$jwt_claim_` returns a JSON-encoded value, so we have to check `\"value\"` (and not  `value`)
+
+<hr>
+
+    Syntax:	 auth_jwt_claim key value;
+    Context: http, server, location
+
+Specifies Jwt must have this claim. This config can be used multiple times and inherits from previous configuration levels.
+
 
 ### Embedded Variables:
 The ngx_http_auth_jwt_module module supports embedded variables:
