@@ -5,8 +5,6 @@
 #include <jwt.h>
 #include <jansson.h>
 
-//
-
 typedef struct {
   ngx_str_t jwt_key;            // Forwarded key (with auth_jwt_key)
   ngx_int_t jwt_flag;           // Function of "auth_jwt": on -> 1 | off -> 0 | $variable -> 2
